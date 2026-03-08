@@ -1,5 +1,4 @@
 #pragma once
-#include <cstddef>
 #include <string>
 #include <utility>
 #include <vector>
@@ -15,6 +14,8 @@ class FIXMessage {
     size_t getFieldCount() const;
 
     const std::vector<std::pair<string, string>> &getAllFields() const;
+
+    bool validate() const;
 
   private:
     std::vector<std::pair<string, string>> FixMessage;
