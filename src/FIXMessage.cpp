@@ -1,6 +1,5 @@
 #include "FIXMessage.h"
 #include <exception>
-#include <iostream>
 #include <string>
 using std::string;
 
