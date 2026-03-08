@@ -9,4 +9,4 @@ project(MyProject
     CXX
 )
 
-add_executable(main src/main.cpp)
+add_executable(main src/main.cpp src/FIXMessage.cpp)
