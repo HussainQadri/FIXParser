@@ -1,4 +1,5 @@
 #include "FIXMessage.h"
+#include <exception>
 #include <string>
 using std::string;
 
@@ -50,18 +51,23 @@ const std::vector<std::pair<string, string>> &FIXMessage::getAllFields() const {
 }
 
 std::pair<string, string> FIXMessage::extractBodyLengthPair() const {
-    return FixMessage.at(1);
+    for (const std::pair<string, string> &currentPair : FixMessage) {
+        if (currentPair.first == "9") {
+            return currentPair;
+        }
+    }
+
+    return {"", ""};
 }
 
 std::pair<string, string> FIXMessage::extractChecksumPair() const {
-
-    std::pair<string, string> currentPair = FixMessage.at(0);
-    int i = 0;
-    while (currentPair.first != "10") {
-        i = i + 1;
-        currentPair = FixMessage.at(i);
+    for (const std::pair<string, string> &currentPair : FixMessage) {
+        if (currentPair.first == "10") {
+            return currentPair;
+        }
     }
-    return currentPair;
+    // Return empty 'pair' for malformed FIX string
+    return {"", ""};
 }
 
 int FIXMessage::calculateTotalBytes() const {
@@ -104,12 +110,29 @@ int FIXMessage::calculateMessageBodyBytes() const {
 }
 
 bool FIXMessage::validate() const {
-    bool checkSumValid =
-        stoi(extractChecksumPair().second) == (calculateTotalBytes() % 256);
-    bool bodyLengthValid =
-        stoi(extractBodyLengthPair().second) == calculateMessageBodyBytes();
-    if (checkSumValid && bodyLengthValid) {
-        return true;
+    std::pair<string, string> checkSumPair = extractChecksumPair();
+    std::pair<string, string> bodyLengthPair = extractBodyLengthPair();
+    if (checkSumPair.first.empty() || bodyLengthPair.first.empty()) {
+        return false;
     }
-    return false;
+
+    try {
+        int expectedCheckSum = stoi(checkSumPair.second);
+        int expectedBodyLength = stoi(checkSumPair.second);
+
+        int actualCheckSum = calculateTotalBytes();
+        int actualBodyLength = calculateMessageBodyBytes();
+
+        bool checkSumValid = expectedCheckSum == actualCheckSum;
+        bool bodyLengthValid = expectedBodyLength == actualBodyLength;
+
+        if (checkSumValid && bodyLengthValid) {
+            return true;
+        } else {
+            return false;
+        }
+
+    } catch (const std::exception &) {
+        return false;
+    }
 }
