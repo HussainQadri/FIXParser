@@ -11,28 +11,40 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# 1. Define Library
-add_library(fixparser
-  src/FIXMessage.cpp
-  src/FIXMessage.h
-)
-target_include_directories(fixparser PUBLIC ${CMAKE_SOURCE_DIR}/src)
-
-# 2. Main Executable
-add_executable(main src/main.cpp)
-target_link_libraries(main PRIVATE fixparser)
-
-# 3. Enable Testing (Must be before add_executable for tests)
-enable_testing()
-
-# 4. Fetch Catch2
+# 1. Fetch Dependencies
 include(FetchContent)
 FetchContent_Declare(
   Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
   GIT_TAG v3.8.1
 )
-FetchContent_MakeAvailable(Catch2)
+FetchContent_Declare(
+  pugixml
+  GIT_REPOSITORY https://github.com/zeux/pugixml.git
+  GIT_TAG v1.14
+)
+FetchContent_MakeAvailable(Catch2 pugixml)
+
+# 2. Define Library
+add_library(fixparser
+  src/FIXMessage.cpp
+  src/FIXMessage.h
+  src/FIXDictionary.cpp
+  src/FIXDictionary.h
+)
+target_include_directories(fixparser PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_link_libraries(fixparser PUBLIC pugixml::pugixml)
+target_compile_definitions(fixparser PRIVATE FIX_DICTIONARY_PATH="${CMAKE_SOURCE_DIR}/src/FIX42.xml")
+
+# 3. Main Executable
+add_executable(main src/main.cpp)
+target_link_libraries(main PRIVATE fixparser)
+
+# Copy the FIX42.xml file to the build directory
+configure_file(${CMAKE_SOURCE_DIR}/src/FIX42.xml ${CMAKE_BINARY_DIR}/FIX42.xml COPYONLY)
+
+# 4. Enable Testing (Must be before add_executable for tests)
+enable_testing()
 
 # 5. Test Executable
 add_executable(tests tests/test_fixmessage.cpp)

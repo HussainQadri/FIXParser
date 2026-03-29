@@ -1,7 +1,9 @@
+#include "FIXDictionary.h"
 #include "FIXMessage.h"
 #include <iostream>
 
 int main() {
+    FIXDictionary fixDictionary;
     string testMessage = "8=FIX.4.2\x01"
                          "9=118\x01"
                          "35=D\x01"
