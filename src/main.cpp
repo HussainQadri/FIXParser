@@ -33,5 +33,10 @@ int main() {
                   << " Value: " << fixMessage.getValueAtIndex(i) << std::endl;
     }
 
+    for (int i = 0; i < fixMessage.getFieldCount(); i++) {
+        std::cout << fixDictionary.getFieldName(fixMessage.getTagAtIndex(i))
+                  << "=" << fixMessage.getValueAtIndex(i) << "\n";
+    }
+
     return 0;
 }
