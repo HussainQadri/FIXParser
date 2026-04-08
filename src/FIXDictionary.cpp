@@ -28,14 +28,29 @@ void FIXDictionary::loadDictionary() {
 }
 
 string FIXDictionary::getFieldName(const string& tag) const {
-    return m_tagValueMap.at(tag);
+    if (isValidTag(tag)) {
+        return m_tagValueMap.at(tag);
+    }
+    return "";
 }
 
 string FIXDictionary::getEnumDescription(const string& tag,
                                          const string& enumValue) const {
-    auto query = m_valueEnumMap.find(tag);
-    if (query != m_valueEnumMap.end()) {
-        return query->second.at(enumValue);
+    auto tagIt = m_valueEnumMap.find(tag);
+    if (tagIt == m_valueEnumMap.end()) {
+        return "";
     }
-    return "";
+    auto valueIt = tagIt->second.find(enumValue);
+    if (valueIt == tagIt->second.end()) {
+        return "";
+    }
+    return valueIt->second;
+}
+
+bool FIXDictionary::isValidTag(const string& tag) const {
+    if (m_tagValueMap.find(tag) != m_tagValueMap.end()) {
+        return true;
+    }
+
+    return false;
 }
