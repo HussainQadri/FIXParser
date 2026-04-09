@@ -31,6 +31,7 @@ int main() {
                        "52=20190605-12:19:52.060\x01"
                        "10=165\x01";
 
+    Heartbeat hb(heartbeat);
     FIXMessage fixMessage(testMessage);
     if (fixMessage.validate()) {
         std::cout << "The fix message is valid!\n";

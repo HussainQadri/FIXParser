@@ -5,6 +5,9 @@
 Heartbeat::Heartbeat(const std::string& rawFixString)
     : TypedMessage(rawFixString),
       m_mandatoryTags{"8", "9", "35", "49", "56", "34", "52", "10"} {
+    if (validate()) {
+        std::cout << "Valid heartbeat" << "\n";
+    }
 }
 
 bool Heartbeat::validate() const {
