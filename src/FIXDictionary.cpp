@@ -25,8 +25,16 @@ void FIXDictionary::loadDictionary() {
             enumDescriptionMap[tagEnumPair.second] = tagEnumPair.first;
         }
     }
-}
 
+    loadHeaderFields(doc);
+}
+void FIXDictionary::loadHeaderFields(const pugi::xml_document& doc) {
+    pugi::xml_node headerFields = doc.child("fix").child("header");
+    for (pugi::xml_node headerField : headerFields) {
+        m_headerFields[headerField.attribute("name").value()] =
+            headerField.attribute("required").value();
+    }
+}
 string FIXDictionary::getFieldName(const string& tag) const {
     if (isValidTag(tag)) {
         return m_tagValueMap.at(tag);
