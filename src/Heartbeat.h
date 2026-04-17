@@ -4,4 +4,5 @@ class Heartbeat : public TypedMessage {
 public:
     Heartbeat(const std::string& rawFixString);
     string msgType() const override;
+    std::string getTestReqID() const;
 };
