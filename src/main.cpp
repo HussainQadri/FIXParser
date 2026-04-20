@@ -2,7 +2,6 @@
 #include "FIXMessage.h"
 #include "Heartbeat.h"
 #include "Logon.h"
-#include <cstdio>
 #include <iostream>
 #include <string>
 using std::string;
