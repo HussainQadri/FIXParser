@@ -28,6 +28,10 @@ public:
 
     std::vector<string> getValues(const string& tag) const;
 
+    void addField(const std::string& tag, const std::string& value);
+
+    std::string serialize() const;
+
 private:
     std::vector<std::pair<string, string>> FixMessage;
     void Parse(const string& rawFixString);
