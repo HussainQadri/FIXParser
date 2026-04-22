@@ -40,6 +40,8 @@ add_library(fixparser
   src/Logout.cpp
   src/TestRequest.h
   src/TestRequest.cpp
+  src/ResendRequest.h
+  src/ResendRequest.cpp
 )
 target_include_directories(fixparser PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(fixparser PUBLIC pugixml::pugixml)
