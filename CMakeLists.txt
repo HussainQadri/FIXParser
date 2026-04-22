@@ -36,6 +36,8 @@ add_library(fixparser
   src/TypedMessage.h
   src/Logon.h
   src/Logon.cpp
+  src/Logout.h
+  src/Logout.cpp
 )
 target_include_directories(fixparser PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(fixparser PUBLIC pugixml::pugixml)
