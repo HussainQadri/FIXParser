@@ -1,3 +1,5 @@
+#pragma once
+
 #include "TypedMessage.h"
 
 class SequenceReset : public TypedMessage {
