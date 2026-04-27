@@ -11,3 +11,10 @@ ResendRequest::ResendRequest(const string& rawFixString)
 std::string ResendRequest::msgType() const {
     return "2";
 }
+
+std::string ResendRequest::beginSeqNo() const {
+    return getValue("7");
+}
+std::string ResendRequest::endSeqNo() const {
+    return getValue("16");
+}
