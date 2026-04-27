@@ -14,3 +14,7 @@ std::string Logon::msgType() const {
 std::string Logon::getHeartBtInt() const {
     return getValue("108");
 }
+
+std::string Logon::getEncryptMethod() const {
+    return getValue("98");
+}

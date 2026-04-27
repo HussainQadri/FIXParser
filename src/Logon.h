@@ -5,4 +5,5 @@ public:
     Logon(const std::string& rawFixString);
     string getHeartBtInt() const;
     string msgType() const override;
+    string getEncryptMethod() const;
 };
