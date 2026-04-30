@@ -165,5 +165,5 @@ bool FIXMessage::validate() const {
 
 void FIXMessage::addField(std::string& cur_message, const std::string& tag,
                           const std::string& value) {
-    cur_message = tag + "=" + value + "\x01";
+    cur_message += tag + "=" + value + "\x01";
 }
