@@ -44,6 +44,8 @@ add_library(fixparser
   src/ResendRequest.cpp
   src/SequenceReset.h
   src/SequenceReset.cpp
+  src/FIXSession.h
+  src/FIXSession.cpp
 )
 target_include_directories(fixparser PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(fixparser PUBLIC pugixml::pugixml)
@@ -69,9 +71,13 @@ target_link_libraries(dict_tests PRIVATE fixparser Catch2::Catch2WithMain)
 add_executable(heartbeat_tests tests/test_heartbeat.cpp)
 target_include_directories(heartbeat_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_link_libraries(heartbeat_tests PRIVATE fixparser Catch2::Catch2WithMain)
+add_executable(session_tests tests/test_fixsession.cpp)
+target_include_directories(session_tests PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_link_libraries(session_tests PRIVATE fixparser Catch2::Catch2WithMain)
 # 6. Test Discovery
 include(CTest)
 include(${catch2_SOURCE_DIR}/extras/Catch.cmake)
 catch_discover_tests(tests)
 catch_discover_tests(dict_tests)
 catch_discover_tests(heartbeat_tests)
+catch_discover_tests(session_tests)
