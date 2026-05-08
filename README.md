@@ -18,6 +18,7 @@ admin messages.
 - Parse raw FIX wire messages in `tag=value<SOH>` format.
 - Preserve field order while also supporting tag lookup.
 - Validate `BodyLength` / `CheckSum`.
+- Serialize outbound messages with recalculated `BodyLength` / `CheckSum`.
 - Load a FIX 4.2 XML dictionary.
 - Resolve tag names and enum descriptions from the dictionary.
 - Validate required header, trailer, and message fields for a `MsgType`.
@@ -28,11 +29,13 @@ admin messages.
   - `TestRequest`
   - `ResendRequest`
   - `SequenceReset`
-- Unit tests for parser, dictionary, and heartbeat behaviour.
+- Provide an initial session layer for admin message construction, session
+  state, sequence-number tracking, TestRequest responses, Logout handling, and
+  resend requests for sequence gaps.
+- Unit tests for parser, dictionary, heartbeat, and session behaviour.
 
-The next stage is to build the session layer on top of this foundation:
-sequence-number handling, logon/logout state, heartbeat scheduling, resend
-flows, persistence, and transport.
+The next stage is to make the session layer more complete: heartbeat
+scheduling, resend/gap-fill replay, persistence, and transport.
 
 ## Why This Exists
 
@@ -77,6 +80,7 @@ You can also run the test binaries directly:
 ./build/tests
 ./build/dict_tests
 ./build/heartbeat_tests
+./build/session_tests
 ```
 
 ## Run Demo
@@ -121,7 +125,7 @@ The intended direction is to grow the project from a parser into a small
 educational FIX engine.
 
 1. Clean up outbound message construction.
-   - Implement `FIXMessage::serialize()`. Which can build FIXMessages
+   - Expand outbound builders beyond the initial admin/session helpers.
 
 2. Strengthen dictionary validation.
    - Validate field types such as `INT`, `BOOLEAN`, `CHAR`, `UTCTIMESTAMP`.
@@ -135,12 +139,10 @@ educational FIX engine.
    - Separate required and optional fields clearly.
    - Add constructors/builders for outbound admin messages.
 
-4. Add session state.
-   - Track sender and target sequence numbers.
-   - Validate incoming `MsgSeqNum`.
-   - Increment outgoing sequence numbers.
-   - Represent session states such as disconnected, logon sent, active, and
-     logout sent.
+4. Extend session state.
+   - Track sender and target sequence numbers across reconnects.
+   - Handle low sequence numbers and duplicate messages more explicitly.
+   - Add richer session errors instead of silently returning no responses.
 
 5. Implement heartbeat flow.
    - Send heartbeats on an interval.
@@ -162,6 +164,5 @@ educational FIX engine.
    - Start with a small subset such as `NewOrderSingle` and
      `ExecutionReport`.
    - Keep application logic separate from session logic.
-
 
 
